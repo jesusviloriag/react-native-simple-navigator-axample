@@ -11,7 +11,8 @@ import {
   View,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 import Navigator from '../navigator/Navigator';
@@ -38,6 +39,26 @@ function Login(): JSX.Element {
           Navigator.navigate("Profile");
         }}>
         <Text style={{color: 'black', fontSize: 16}}>Go to Profile</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{backgroundColor: 'blue', padding: 15, borderRadius: 5}}
+        onPress={() => {
+          Navigator.openModal({
+            title: "Modal title",  //title of the window
+            text: "This is a test text, it can be very long, but try to be brief :)", //text inside of the window
+            component: <Image style={{width: 300, height: 300}} source={require('../assets/do_not.jpg')}></Image>,  //component to render inside of the window
+            buttons: [  //buttons at the bottom of the window 
+              {
+                text: "Cancel"   //Cancel button always closes the window
+              },
+              {
+                text: "OK",  //text inside the button
+                onPress: () => alert("OK pressed")  //onPress function inside of the button
+              }
+            ]
+          })
+        }}>
+        <Text style={{color: 'white', fontSize: 16}}>Open modal window</Text>
       </TouchableOpacity>
     </View>
   );

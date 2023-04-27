@@ -52,7 +52,8 @@ function App(): JSX.Element {
         name: 'Profile',
         title: 'Profile screenie, my dude',
         options: {
-          topTabColor: '#000'
+          topTabColor: '#000',
+          hideBackButton: true
         }
       }]}
       initialScreen={'Login'}

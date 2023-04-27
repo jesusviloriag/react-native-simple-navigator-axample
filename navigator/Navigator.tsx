@@ -13,7 +13,8 @@ import {
   Text,
   TouchableOpacity,
   StatusBar,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 
 class Navigator extends React.Component {
@@ -36,7 +37,8 @@ class Navigator extends React.Component {
         screens: props.screens,
         currentScreen: initialScreen,
         stack: [initialScreen],
-        bottomTab: props.bottomTab
+        bottomTab: props.bottomTab,
+        showModal: false
       }
     }    
   }  
@@ -230,6 +232,157 @@ class Navigator extends React.Component {
     }
   }
 
+  static openModal(options: any) {
+    Navigator.instance.setState({
+      showModal: true,
+      modalTitle: options.title,
+      modalText: options.text,
+      modalComponent: options.component,
+      modalButtons: options.buttons
+    });
+  }
+
+  static showModalText() {
+    if(Navigator.instance.state.modalText) {
+      return (
+        <Text style={{color: 'black',}}>{Navigator.instance.state.modalText}</Text>
+      )
+    } else {
+      return null;
+    }
+  }
+
+  static showModalComponent() {
+    if(Navigator.instance.state.modalComponent) {
+      return (
+        <View style={{
+          flex: 1,
+          marginTop: 15,
+          alignItems: 'center',
+          alignContent: 'center'
+        }}>
+          {Navigator.instance.state.modalComponent}
+        </View>        
+      )
+    } else {
+      return null;
+    }
+  }
+
+  static showModalButtons() {
+    if(Navigator.instance.state.modalButtons) {
+      return (
+        Navigator.instance.state.modalButtons.map((item, key)=>(
+          <TouchableOpacity key={key}
+            onPress={()=> {
+              if(item.onPress)
+                item.onPress();
+              Navigator.instance.setState({showModal: false});
+            }}
+            style={{padding: 7, width: 75, marginLeft: 15, alignContent: 'center', alignItems: 'center', borderRadius: 7, borderColor: 'grey', borderWidth: 1}}>
+              <Text>{item.text}</Text>
+          </TouchableOpacity>
+        )) 
+      )
+    } else {
+      return null;
+    }
+  }
+
+  static showModal() {
+    if(Navigator.instance.state.showModal) {
+      return (
+        <View 
+          style={{
+            height: Dimensions.get("window").height,
+            width: Dimensions.get("window").width,
+            position: 'absolute'
+          }}>
+              <TouchableOpacity 
+                onPress={() => Navigator.instance.setState({showModal: false})}
+                style={{
+                  height: Dimensions.get("window").height,
+                  width: Dimensions.get("window").width,
+                  backgroundColor: 'rgba(0,0,0,0.75)',
+                  position: 'absolute'
+                }}></TouchableOpacity>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  marginVertical: '20%',
+                  marginHorizontal: '7%',
+                  flex: 1,
+                  borderRadius: 7,
+                  
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.50,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                }}>
+
+                  <View style={{
+                    backgroundColor: 'white',
+                    height: 50,
+                    borderTopLeftRadius: 7,
+                    borderTopRightRadius: 7,
+                    width: '100%',
+                    borderBottomWidth: 1,
+                    borderColor: 'grey',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>{Navigator.instance.state.modalTitle}</Text>
+                    <TouchableOpacity 
+                      onPress={() => Navigator.instance.setState({showModal: false})}
+                      style={{
+                        position: 'absolute',
+                        right: 15
+                      }}>
+                      <Image style={{width: 15, height: 15}} source={require('../assets/close.png')}></Image>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={{
+                    flex: 1
+                  }}>
+                    <View style={{
+                      padding: 15
+                    }}>
+                      {Navigator.showModalText()}
+                      {Navigator.showModalComponent()}
+                    </View>
+                  </View>
+
+                  <View style={{
+                    backgroundColor: 'white',
+                    height: 50,
+                    borderBottomLeftRadius: 7,
+                    borderBottomRightRadius: 7,
+                    width: '100%',
+                    borderTopWidth: 1,
+                    borderColor: 'grey',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                  }}>                    
+                    {Navigator.showModalButtons()}
+                  </View>
+
+              </View>
+        </View>
+      )
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
       <View style={{
@@ -239,6 +392,7 @@ class Navigator extends React.Component {
         {Navigator.showTopTab()}
         {Navigator.instance.showScreen()}
         {Navigator.showBottomTab()}
+        {Navigator.showModal()}
       </View>
     );
   }
