@@ -66,7 +66,23 @@ function App(): JSX.Element {
   );
 }
 ```
-
+Modal Window:
+```
+Navigator.openModal({
+  title: "Modal title",  //title of the window
+  text: "This is a test text, it can be very long, but try to be brief :)", //text inside of the window
+  component: <Image style={{width: 300, height: 300}} source={uri: 'https://i.imgur.com/29x54Bf.jpg' }></Image>,  //component to render inside of the window
+  buttons: [  //buttons at the bottom of the window 
+    {
+      text: "Cancel"   //Cancel button always closes the window
+    },
+    {
+      text: "OK",  //text inside the button
+      onPress: () => alert("OK pressed")  //onPress function inside of the button
+    }
+  ]
+})
+```
 ![alt text](https://i.imgur.com/1u7W2WD.png)
 ![alt text](https://i.imgur.com/kNYVXXM.png)
 ![alt text](https://i.imgur.com/yF887tm.png)
